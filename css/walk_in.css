@@ -1,0 +1,144 @@
+/* Container Styling */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+/* Label Styling */
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Input and Select Styling */
+input, select, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 25px;
+    padding: 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Notification Styling */
+.notification {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Success Notification */
+.notification.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Error Notification */
+.notification.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Queue Section Styling */
+.queue-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.queue-section h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: left;
+    font-weight: bold;
+}
+
+/* Queue Table Styling */
+.queue-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.queue-table th, .queue-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.queue-table th {
+    background-color: #e9ecef;
+    font-weight: bold;
+    color: #333;
+}
+
+.queue-table td {
+    background-color: #fff;
+    color: #555;
+}
+
+/* Individual Slot Section */
+.slot-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.slot-section h4 {
+    font-size: 18px;
+    color: #007bff;
+    margin-bottom: 10px;
+    text-align: left;
+}

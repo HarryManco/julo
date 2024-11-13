@@ -1,0 +1,170 @@
+body {
+    background-color: #f3f4f6;
+    color: #333;
+}
+
+/* Header (Hero) Section */
+.home {
+    background: url(../images/img1.jpg) center/cover no-repeat;
+    border-image: inherit;
+    height: 75vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    background-attachment: scroll;
+}
+
+.home-content h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+
+.home-content p {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+.home-content .btn {
+    background-color: #33c5ff;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 5px;
+}
+
+/* Services Section */
+.services {
+    background: linear-gradient(white, skyblue);
+    padding: 50px;
+    text-align: center;
+}
+
+.services h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.service-items {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.service-item {
+    background: repeating-linear-gradient(white, lightgrey);
+    padding: 20px;
+    width: 250px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.service-item h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Cafe Section */
+.cafe{
+    background: linear-gradient(skyblue, white);
+    padding: 50px;
+    background-color: #eee;
+    text-align: center;
+}
+.cafe h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+.cafe h3{
+    color: white;
+}
+.menu-items {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+.cafe a{
+    background-color: #33c5ff;
+    margin-top: 10px;
+    padding: 10px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 5px;
+}
+.menu-item {
+    background: repeating-linear-gradient(white, lightgrey);
+    padding: 20px;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.menu-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+.menu-item h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Feedback Section */
+.feedback {
+    background: linear-gradient(white,skyblue);
+    padding: 50px;
+    background-color: #eee;
+    text-align: center;
+}
+
+.feedback h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.feedback-items {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.feedback-item {
+    background: repeating-linear-gradient(white, lightgrey);
+    padding: 20px;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.feedback-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.feedback-item h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.contact{
+    padding: 20px;
+    text-align: center;
+    background: repeating-linear-gradient(skyblue, #333);
+    color: #fff;
+}
+
+/* Footer */
+footer {
+    padding: 20px;
+    text-align: center;
+    background-color: #333;
+    color: #fff;
+}

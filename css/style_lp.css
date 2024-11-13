@@ -1,0 +1,459 @@
+/* Header Styling */
+.header {
+    background: linear-gradient(skyblue, white); /* Light background */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 10px 0;
+    z-index: 1000; /* Ensures header stays on top */
+}
+
+/* Navbar Brand */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #343a40;
+    transition: color 0.3s ease;
+    margin-right: 2rem; /* Spacing to center */
+}
+
+.navbar-brand:hover {
+    color: #007bff;
+}
+
+/* Navbar Links */
+.navbar-nav .nav-link {
+    color: #343a40;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    margin: 0 0.5rem; /* Spacing between links */
+}
+
+.navbar-nav .nav-link:hover, .navbar-nav .nav-link.active {
+    color: #007bff;
+    font-weight: 600;
+}
+
+/* Improved Login Button */
+.btn-primary {
+    color: #fff; /* Text color */
+    background-color: #007bff; /* Primary background color */
+    border: none; /* No border */
+    border-radius: 25px; /* More rounded corners for a modern look */
+    padding: 0.5rem 1.5rem; /* Increased padding for better size */
+    font-size: 1rem; /* Font size for the button */
+    font-weight: 600; /* Slightly bolder text */
+    text-transform: uppercase; /* Uppercase text for emphasis */
+    letter-spacing: 1px; /* Spacing between letters */
+    transition: background-color 0.3s ease, transform 0.2s; /* Smooth background transition */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Fixed Header Adjustment for Body */
+body {
+    padding-top: 60px; /* Adjust based on header height */
+}
+
+/* Header Centered Layout */
+.header .container-fluid {
+    max-width: 80%; /* Limit the width of header container */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content */
+    padding: 10px 0;
+}
+
+/* Center the Navbar Collapse */
+.navbar-collapse {
+    justify-content: center;
+}
+/* ==================================================== */
+/* Main Container */
+main.container {
+    max-width: 100%;
+    padding: 20px;
+    margin: 20px auto;
+    background-color: #ffffff;
+}
+/* General Carousel Styling */
+.carousel-item {
+    position: relative;
+    height: 80vh;
+}
+
+.carousel-item img {
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(60%);
+}
+
+/* Overlay for Better Text Readability */
+.carousel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.281);
+}
+
+/* Responsive Caption Styling */
+.carousel-caption {
+    bottom: 25%;
+    color: #ffffff;
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.carousel-caption h3 {
+    font-size: calc(1.2rem + 0.5vw);
+    font-weight: 400;
+    margin-bottom: 10px;
+}
+
+.carousel-caption h1 {
+    font-size: calc(2.5rem + 1vw);
+    font-weight: 700;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.carousel-caption p {
+    font-size: calc(1rem + 0.2vw);
+    max-width: 600px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* Custom Button Styling */
+.btn-custom {
+    color: #fff; /* Text color */
+    background-color: #007bff; /* Primary background color */
+    border: none; /* No border */
+    border-radius: 25px; /* More rounded corners for a modern look */
+    padding: 0.5rem 1.5rem; /* Increased padding for better size */
+    font-size: 1rem; /* Font size for the button */
+    font-weight: 600; /* Slightly bolder text */
+    text-transform: uppercase; /* Uppercase text for emphasis */
+    letter-spacing: 1px; /* Spacing between letters */
+    transition: background-color 0.3s ease, transform 0.2s; /* Smooth background transition */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.btn-custom:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+}
+
+/* Carousel Controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%);
+    opacity: 0.7;
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+    opacity: 1;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .carousel-caption {
+        bottom: 15%;
+        text-align: center;
+    }
+
+    .carousel-caption h3,
+    .carousel-caption h1,
+    .carousel-caption p {
+        text-align: center;
+    }
+
+    .carousel-caption h1 {
+        font-size: 2rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .btn-custom {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-caption {
+        bottom: 10%;
+    }
+
+    .carousel-caption h1 {
+        font-size: 1.8rem;
+    }
+
+    .carousel-caption p {
+        font-size: 0.9rem;
+    }
+}
+
+/* =================================================== */
+/* General About Section Styling */
+.about {
+    background-color: #f9f9f9; /* Light gray for a soft background */
+    padding: 4rem 0; /* Generous padding for a spacious feel */
+    border-top: 4px solid #007bff; /* Subtle top border for emphasis */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+/* Section Header Styling */
+.section-header p {
+    color: #6c757d; /* Muted gray for subtlety */
+    font-size: 1rem; /* Clear and legible size */
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem; /* Space below */
+}
+
+.section-header h2 {
+    font-size: 2rem; /* Clear, prominent size */
+    color: #343a40; /* Dark gray for contrast */
+    margin-bottom: 1.5rem; /* Space below */
+    text-transform: capitalize;
+    font-weight: 600; /* Bold for emphasis */
+}
+
+/* Text and Icon List Styling */
+.about-content p {
+    font-size: 1.1rem; /* Readable size */
+    color: #495057; /* Slightly darker for better contrast */
+    margin-bottom: 1rem; /* Space below paragraphs */
+}
+
+.about-content ul {
+    list-style: none; /* Remove default list styling */
+    padding-left: 0; /* Remove padding */
+    line-height: 1.6; /* Comfortable line height */
+}
+
+.about-content ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem; /* Space between list items */
+}
+
+.about-content ul i {
+    color: #007bff; /* Consistent icon color */
+    font-size: 1.5rem; /* Sufficient size for visibility */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .section-header h2 {
+        font-size: 1.8rem; /* Adjusted size for smaller screens */
+    }
+
+    .about-content p {
+        font-size: 1rem; /* Adjusted paragraph size */
+    }
+
+    .about-content ul li {
+        font-size: 0.95rem; /* Slightly smaller for compactness */
+    }
+}
+/* ===================================================== */
+/* Container for flexible card sizing */
+.service {
+    background-color: #d6e0ec; /* Light background for contrast */
+    border-top: 4px solid#f8f41e;
+    padding: 40px 0;
+}
+.service .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+.service .text-center {
+    width: 100%;
+}
+/* Service Card */
+.service-item {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+}
+
+.service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.service-icon {
+    font-size: 3rem;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.service-item h3 {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #343a40;
+}
+
+.service-item p {
+    font-size: 0.95rem;
+    color: #6c757d;
+}
+
+.service .text-muted {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.service .fw-bold {
+    font-size: 2rem;
+    color: #343a40;
+}
+
+/* Badge Container */
+.badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.badge-vehicle {
+    background-color: #e9ecef;
+    color: #495057;
+    font-size: 0.85rem;
+    padding: 0.25em 0.75em;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+/* Price and Time */
+.service-price {
+    color: #007bff;
+    font-size: 1.15rem;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.service-time {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+/* Book Now Button */
+.book-btn {
+    text-decoration: none;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.book-btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .service .container {
+        gap: 1rem;
+    }
+
+    .service-item {
+        padding: 15px;
+    }
+
+    .service-item h3 {
+        font-size: 1.15rem;
+    }
+
+    .service-item p {
+        font-size: 0.9rem;
+    }
+
+    .service-price {
+        font-size: 1rem;
+    }
+
+    .service-time {
+        font-size: 0.85rem;
+    }
+
+    .book-btn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+/* =========================================================== */
+/* Username Styling */
+.username {
+    color: #343a40;
+    font-weight: 500;                   /* Text color */
+    margin-left: 8px;               /* Add space between image and text */
+    white-space: nowrap;            /* Prevent text wrapping */
+    overflow: hidden;               /* Hide overflow */
+    text-overflow: ellipsis;        /* Add ellipsis for overflow text */
+    text-decoration: none;           /* Remove underline */
+}
+
+/* ==================================================== */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .card:hover {
+    transform: scale(1.05); /* Slightly enlarge card on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Adjust card image */
+  .card-img-top {
+    height: 180px;
+    object-fit: cover;
+  }
+
+  /* =================== */
+  .card {
+    width: auto;
+    height: 200px; /* Set the height to ensure all cards are the same size */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img {
+    width: 100px !important; /* Force the image width to be 150px */
+    height: 110px !important; /* Force the image height to be 150px */
+    object-fit: cover; /* Ensures the image scales properly without stretching */
+}
+
+.card h4 {
+    font-size: 1.1rem; /* Adjust font size to make it smaller */
+}
+
+.card p {
+    font-size: 0.9rem; /* Adjust font size to make it smaller */
+}

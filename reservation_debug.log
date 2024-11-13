@@ -1,0 +1,24 @@
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction Error: Error adding transaction: Cannot add or update a child row: a foreign key constraint fails (`julowash`.`carwash_transactions`, CONSTRAINT `carwash_transactions_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`) ON DELETE SET NULL)
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction entry added successfully.
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction entry added successfully.
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction entry added successfully.
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction entry added successfully.
+Starting reservation process...
+Reservation entry added.
+Queue entry added.
+Transaction entry added successfully.

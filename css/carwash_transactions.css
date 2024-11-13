@@ -1,0 +1,52 @@
+/* carwash_transactions.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+    overflow: hidden;
+}
+
+h2 {
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.transaction-table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+.transaction-table th, .transaction-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.transaction-table th {
+    background-color: #333;
+    color: white;
+}
+
+.transaction-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.transaction-table tr:hover {
+    background-color: #ddd;
+}

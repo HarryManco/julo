@@ -1,0 +1,274 @@
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 8
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 14
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 7
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 15
+Next available start time: 07:55:00
+Available time: 07:55:00
+Calculated end time: 08:25:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 8
+    [service_type] => 3
+    [slot] => 1
+    [price] => 350.00
+    [duration] => 50
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 16
+Next available start time: 08:30:00
+Available time: 08:30:00
+Calculated end time: 09:20:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Kevin
+    [vehicle_type] => 7
+    [service_type] => 4
+    [slot] => 3
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 17
+Next available start time: 07:05:00
+Available time: 07:05:00
+Calculated end time: 07:35:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 8
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 18
+Next available start time: 07:55:00
+Available time: 07:55:00
+Calculated end time: 08:25:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 8
+    [service_type] => 4
+    [slot] => 3
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 19
+Next available start time: 07:05:00
+Available time: 07:05:00
+Calculated end time: 07:35:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 8
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 20
+Next available start time: 07:55:00
+Available time: 07:55:00
+Calculated end time: 08:25:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Kevin
+    [vehicle_type] => 7
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 21
+Next available start time: 08:30:00
+Available time: 08:30:00
+Calculated end time: 09:00:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Aileen Cuevas
+    [vehicle_type] => 7
+    [service_type] => 4
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 22 and status: Waiting
+Next available start time: 09:05:00
+Available time: 09:05:00
+Calculated end time: 09:35:00
+Queue insert statement prepared
+Queue entry added successfully with status: Waiting
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 7
+    [service_type] => 3
+    [slot] => 1
+    [price] => 350.00
+    [duration] => 50
+)
+
+Transaction started
+Walk-in insert statement prepared
+Walk-in record inserted with ID: 23
+Next available start time: 09:40:00
+Available time: 09:40:00
+Calculated end time: 10:30:00
+Queue insert statement prepared
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Aileen Cuevas
+    [vehicle_type] => 6
+    [service_type] => 4
+    [slot] => 1
+    [price] => 200.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 24
+Available time: 07:55:00, End time: 08:25:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 9
+    [service_type] => 6
+    [slot] => 1
+    [price] => 100.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 25
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Aileen Cuevas
+    [vehicle_type] => 9
+    [service_type] => 7
+    [slot] => 2
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 26
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 10
+    [service_type] => 5
+    [slot] => 1
+    [price] => 300.00
+    [duration] => 50
+)
+
+Transaction started
+Walk-in record inserted with ID: 27
+Available time: 07:40:00, End time: 08:30:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Billy Almario
+    [vehicle_type] => 11
+    [service_type] => 6
+    [slot] => 2
+    [price] => 150.00
+    [duration] => 25
+)
+
+Transaction started
+Walk-in record inserted with ID: 28
+Available time: 07:05:00, End time: 07:30:00
+Queue entry added successfully
+Transaction committed

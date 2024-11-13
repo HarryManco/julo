@@ -1,0 +1,127 @@
+/* General body styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+/* Main container to center content */
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+/* Reservation form container styling */
+.reservation-form-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+}
+
+.reservation-form-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Notification styling */
+.notification {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Success notification */
+.notification.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* Warning notification */
+.notification.warning {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #ffffff;
+}
+/* Center notification within the form container */
+.reservation-form-container .notification {
+    width: 100%;
+    margin: 0 auto 20px auto;
+    text-align: center;
+}
+
+
+/* Register link styled as a button */
+.notification .register-link {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.notification .register-link:hover {
+    background-color: #0056b3;
+}
+
+/* Form input and button styling */
+form label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-top: 10px;
+    text-align: left;
+}
+
+form input[type="text"],
+form input[type="tel"],
+form input[type="date"],
+form input[type="time"],
+form select,
+form button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+form input[readonly] {
+    background-color: #f9f9f9;
+}
+
+form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
