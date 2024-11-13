@@ -272,3 +272,35 @@ Walk-in record inserted with ID: 28
 Available time: 07:05:00, End time: 07:30:00
 Queue entry added successfully
 Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Harry Manco
+    [vehicle_type] => 11
+    [service_type] => 7
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 29
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [customer_name] => Aileen Cuevas
+    [vehicle_type] => 1
+    [service_type] => 6
+    [slot] => 2
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 30
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed

@@ -1,7 +1,11 @@
 <?php
 include 'db_connect.php';
 
-$query = "SELECT * FROM queue";
+// Get the current date
+$current_date = date('Y-m-d');
+
+// Modify the query to display only today's queue
+$query = "SELECT * FROM queue WHERE queue_date = '$current_date'";
 $result = mysqli_query($conn, $query);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -46,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
 <div class="container">
-    <h2>Manage Queue</h2>
+    <h2>Manage Queue - <?php echo date('F j, Y'); ?></h2>
     <table>
         <thead>
         <tr>
@@ -58,25 +62,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </tr>
         </thead>
         <tbody>
-        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <?php if (mysqli_num_rows($result) > 0): ?>
+            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                <tr>
+                    <td><?= $row['queue_id'] ?></td>
+                    <td><?= $row['customer_type'] ?></td>
+                    <td><?= $row['queue_status'] ?></td>
+                    <td><?= $row['assigned_slot'] ?></td>
+                    <td>
+                        <form method="POST">
+                            <input type="hidden" name="queue_id" value="<?= $row['queue_id'] ?>">
+                            <select name="queue_status" required>
+                                <option value="Waiting" <?= $row['queue_status'] === 'Waiting' ? 'selected' : '' ?>>Waiting</option>
+                                <option value="Serving" <?= $row['queue_status'] === 'Serving' ? 'selected' : '' ?>>Serving</option>
+                                <option value="Finished" <?= $row['queue_status'] === 'Finished' ? 'selected' : '' ?>>Finished</option>
+                            </select>
+                            <button type="submit" name="update_queue">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+        <?php else: ?>
             <tr>
-                <td><?= $row['queue_id'] ?></td>
-                <td><?= $row['customer_type'] ?></td>
-                <td><?= $row['queue_status'] ?></td>
-                <td><?= $row['assigned_slot'] ?></td>
-                <td>
-                    <form method="POST">
-                        <input type="hidden" name="queue_id" value="<?= $row['queue_id'] ?>">
-                        <select name="queue_status" required>
-                            <option value="Waiting" <?= $row['queue_status'] === 'Waiting' ? 'selected' : '' ?>>Waiting</option>
-                            <option value="Serving" <?= $row['queue_status'] === 'Serving' ? 'selected' : '' ?>>Serving</option>
-                            <option value="Finished" <?= $row['queue_status'] === 'Finished' ? 'selected' : '' ?>>Finished</option>
-                        </select>
-                        <button type="submit" name="update_queue">Update</button>
-                    </form>
-                </td>
+                <td colspan="5">No queues for today.</td>
             </tr>
-        <?php endwhile; ?>
+        <?php endif; ?>
         </tbody>
     </table>
 </div>

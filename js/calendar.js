@@ -45,7 +45,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     dateElement.classList.add("selected");
                     selectedDate = cellDate;
 
-                    makeReservationBtn.style.display = "block"; // Show the "Make Reservation" button
+                    console.log(`Selected date: ${formatDate(selectedDate)}`); // Debugging line
+                    // Fetch availability for each slot on the selected date
+                    fetchAvailabilityForSlots(formatDate(selectedDate));
+
+                    // Show the "Make Reservation" button
+                    makeReservationBtn.style.display = "block";
                 });
             }
 
@@ -53,19 +58,46 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function fetchAvailabilityForSlots(date) {
+        const slots = [1, 2, 3];
+        const serviceDuration = 30; // Duration in minutes, adjust as needed
+
+        slots.forEach(slot => {
+            fetch(`get_available_times.php?date=${date}&slot=${slot}&duration=${serviceDuration}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Network response was not ok (${response.status})`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(`Slot ${slot} availability for ${date}:`, data); // Debugging line
+                    const slotTimesContainer = document.getElementById(`slot${slot}Times`);
+                    if (data.length > 0) {
+                        slotTimesContainer.innerHTML = data.map(time => `<div>${time}</div>`).join("");
+                    } else {
+                        slotTimesContainer.innerHTML = "No available times";
+                    }
+                })
+                .catch(error => console.error("Error fetching available times:", error));
+        });
+
+        document.getElementById("availabilityTable").style.display = "block";
+    }
+
     function makeReservation() {
         if (selectedDate) {
-            // Format date as YYYY-MM-DD without time information
-            const year = selectedDate.getFullYear();
-            const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-            const day = String(selectedDate.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-    
-            // Redirect to reservation.php with the selected date
+            const formattedDate = formatDate(selectedDate);
             window.location.href = `reservation.php?date=${formattedDate}`;
         }
     }
-    
 
     document.getElementById("makeReservationBtn").addEventListener("click", makeReservation);
 

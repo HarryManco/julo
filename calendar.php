@@ -27,9 +27,36 @@
             </div>
             <div class="dates" id="dates"></div>
         </div>
-        <!-- Hidden "Make Reservation" button that appears when a date is selected -->
+
+        <!-- Slot Availability Table -->
+        <div class="availability-table" id="availabilityTable" style="display: none;">
+            <table>
+                <tr>
+                    <th>SLOT 1</th>
+                    <th>SLOT 2</th>
+                    <th>SLOT 3</th>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>Time Availability:</h4>
+                        <div id="slot1Times"></div> <!-- Dynamic content for Slot 1 times -->
+                    </td>
+                    <td>
+                        <h4>Time Availability:</h4>
+                        <div id="slot2Times"></div> <!-- Dynamic content for Slot 2 times -->
+                    </td>
+                    <td>
+                        <h4>Time Availability:</h4>
+                        <div id="slot3Times"></div> <!-- Dynamic content for Slot 3 times -->
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- "Make Reservation" Button, shown only after a date is selected -->
         <button id="makeReservationBtn" class="reserve-btn" style="display: none;" onclick="makeReservation()">Make Reservation</button>
     </div>
+
     <script src="js/calendar.js"></script>
 </body>
 </html>
