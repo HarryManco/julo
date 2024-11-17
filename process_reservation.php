@@ -31,26 +31,35 @@ if (
     $paid_fee = $_POST['paid_fee'];
     $remaining_fee = $_POST['remaining_fee'];
     $reservation_status = "Approved";
-    $payment_status = "Paid";
+    $payment_status = "Unpaid";
     $payment_method = "PayPal"; // Assuming PayPal is used
-    $customer_id = $_SESSION['user_id']; // Retrieve customer ID from session
-
-    $log_file = 'reservation_debug.log';
-    file_put_contents($log_file, "Starting reservation process...\n", FILE_APPEND);
+    $user_id = $_SESSION['user_id']; // Retrieve the user ID from the session
 
     $conn->begin_transaction();
 
     try {
+        // Deduct service quantity
+        $quantity_update_sql = "UPDATE services SET quantity = quantity - 1 WHERE id = ? AND quantity > 0";
+        $quantity_stmt = $conn->prepare($quantity_update_sql);
+        if ($quantity_stmt) {
+            $quantity_stmt->bind_param("i", $service_type);
+            if (!$quantity_stmt->execute() || $quantity_stmt->affected_rows === 0) {
+                throw new Exception("Service is out of stock or invalid service ID.");
+            }
+        } else {
+            throw new Exception("Error preparing quantity update statement: " . $conn->error);
+        }
+        $quantity_stmt->close();
+
         // Insert reservation data
-        $sql = "INSERT INTO reservations (reservation_date, customer_name, vehicle_type, phone, service_type, slot, reservation_time, end_time, price, paid_fee, remaining_fee, reservation_status, payment_status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO reservations (user_id, reservation_date, customer_name, vehicle_type, phone, service_type, slot, reservation_time, end_time, price, paid_fee, remaining_fee, reservation_status, payment_status) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
 
         if ($stmt) {
-            $stmt->bind_param("ssssssssdddss", $reservation_date, $customer_name, $vehicle_type, $phone, $service_type, $slot, $reservation_time, $end_time, $price, $paid_fee, $remaining_fee, $reservation_status, $payment_status);
+            $stmt->bind_param("isssssssssddss", $user_id, $reservation_date, $customer_name, $vehicle_type, $phone, $service_type, $slot, $reservation_time, $end_time, $price, $paid_fee, $remaining_fee, $reservation_status, $payment_status);
 
             if ($stmt->execute()) {
-                file_put_contents($log_file, "Reservation entry added.\n", FILE_APPEND);
                 $reservation_id = $stmt->insert_id;
                 
                 // Insert into queue
@@ -61,33 +70,27 @@ if (
                 
                 if ($queue_stmt) {
                     $queue_stmt->bind_param("isssss", $reservation_id, $queue_status, $slot, $reservation_time, $end_time, $reservation_date);
-                    if ($queue_stmt->execute()) {
-                        file_put_contents($log_file, "Queue entry added.\n", FILE_APPEND);
-                        
-                        // Insert transaction for reservation fee
-                        $transaction_sql = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
-                                            VALUES (?, 'Reservation', 'Reservation Fee', ?, ?)";
-                        $transaction_stmt = $conn->prepare($transaction_sql);
-
-                        if ($transaction_stmt) {
-                            $transaction_stmt->bind_param("ids", $customer_id, $paid_fee, $payment_method);
-                            if ($transaction_stmt->execute()) {
-                                file_put_contents($log_file, "Transaction entry added successfully.\n", FILE_APPEND);
-                                echo "Reservation, Queue, and Transaction successfully added.";
-                            } else {
-                                throw new Exception("Error adding transaction: " . $transaction_stmt->error);
-                            }
-                            $transaction_stmt->close();
-                        } else {
-                            throw new Exception("Error preparing transaction statement: " . $conn->error);
-                        }
-                        
-                    } else {
+                    if (!$queue_stmt->execute()) {
                         throw new Exception("Error adding reservation to queue: " . $queue_stmt->error);
                     }
                     $queue_stmt->close();
                 } else {
                     throw new Exception("Error preparing queue statement: " . $conn->error);
+                }
+
+                // Insert transaction for reservation fee
+                $transaction_sql = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
+                                    VALUES (?, 'Reservation', 'Reservation Fee', ?, ?)";
+                $transaction_stmt = $conn->prepare($transaction_sql);
+
+                if ($transaction_stmt) {
+                    $transaction_stmt->bind_param("ids", $user_id, $paid_fee, $payment_method);
+                    if (!$transaction_stmt->execute()) {
+                        throw new Exception("Error adding transaction: " . $transaction_stmt->error);
+                    }
+                    $transaction_stmt->close();
+                } else {
+                    throw new Exception("Error preparing transaction statement: " . $conn->error);
                 }
             } else {
                 throw new Exception("Error adding reservation: " . $stmt->error);
@@ -98,9 +101,9 @@ if (
         }
 
         $conn->commit();
+        echo "Reservation, Queue, and Transaction successfully added. Quantity updated.";
     } catch (Exception $e) {
         $conn->rollback();
-        file_put_contents($log_file, "Transaction Error: " . $e->getMessage() . "\n", FILE_APPEND);
         echo "Transaction Error: " . $e->getMessage();
     }
 } else {

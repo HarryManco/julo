@@ -108,7 +108,7 @@ $success_message = isset($_GET['success']) && $_GET['success'] == 'true' ? "Rese
                 <input type="text" id="price" name="price" readonly>
 
                 <label for="paid_fee">Paid Fee:</label>
-                <input type="text" id="paid_fee" name="paid_fee" value="5.00" readonly>
+                <input type="text" id="paid_fee" name="paid_fee" value="1.00" readonly>
 
                 <label for="remaining_fee">Remaining Fee:</label>
                 <input type="text" id="remaining_fee" name="remaining_fee" readonly>
@@ -122,7 +122,9 @@ $success_message = isset($_GET['success']) && $_GET['success'] == 'true' ? "Rese
                 </select>
 
                 <label for="reservation_time">Select Time:</label>
-                <input type="time" id="reservation_time" name="reservation_time" required onchange="calculateEndTime()">
+                <select id="reservation_time" name="reservation_time" required>
+                    <option value="">--Select Time--</option>
+                </select>
 
                 <label for="end_time">End Time:</label>
                 <input type="text" id="end_time" name="end_time" readonly>

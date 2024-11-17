@@ -1,45 +1,99 @@
 <?php
 include 'db_connect.php';
 
-// Get the current date
+// Initialize notification message
+$notification = "";
+
+// Set the default timezone
+date_default_timezone_set('Asia/Manila');
 $current_date = date('Y-m-d');
 
-// Modify the query to display only today's queue
-$query = "SELECT * FROM queue WHERE queue_date = '$current_date'";
-$result = mysqli_query($conn, $query);
+// Log script initialization
+error_log("manage_queue.php initialized. Current date: $current_date");
+
+// Query to display today's queue
+$query = "SELECT * FROM queue WHERE queue_date = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $current_date);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['update_queue'])) {
         $queue_id = $_POST['queue_id'];
         $status = $_POST['queue_status'];
 
-        // Update the queue status
-        $update_query = "UPDATE queue SET queue_status = '$status' WHERE queue_id = $queue_id";
-        mysqli_query($conn, $update_query);
+        // Prevent duplicate form submissions
+        session_start();
+        if (isset($_SESSION['last_queue_update']) && $_SESSION['last_queue_update'] == "$queue_id-$status") {
+            error_log("Duplicate form submission prevented for queue ID: $queue_id");
+            exit();
+        }
+        $_SESSION['last_queue_update'] = "$queue_id-$status";
 
-        // Fetch customer_type and customer_id to determine which table to update
-        $queue_result = mysqli_query($conn, "SELECT customer_id, customer_type FROM queue WHERE queue_id = $queue_id");
-        $queue_data = mysqli_fetch_assoc($queue_result);
+        // Update queue status
+        $update_query = "UPDATE queue SET queue_status = ? WHERE queue_id = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("si", $status, $queue_id);
 
-        if ($queue_data) {
-            $customer_id = $queue_data['customer_id'];
-            $customer_type = $queue_data['customer_type'];
+        if ($stmt->execute()) {
+            error_log("Queue status updated: queue_id=$queue_id, status=$status");
 
-            // Update the status in the corresponding table based on customer_type
-            if ($customer_type === 'Walk-in') {
-                $update_walkin_query = "UPDATE walk_in SET walk_in_status = '$status' WHERE walk_in_id = $customer_id";
-                mysqli_query($conn, $update_walkin_query);
-            } elseif ($customer_type === 'Reservation') {
-                $update_reservation_query = "UPDATE reservations SET reservation_status = '$status' WHERE reservation_id = $customer_id";
-                mysqli_query($conn, $update_reservation_query);
+            // Fetch customer_id and customer_type
+            $queue_result = $conn->query("SELECT customer_id, customer_type FROM queue WHERE queue_id = $queue_id");
+            $queue_data = $queue_result->fetch_assoc();
+
+            if ($queue_data) {
+                $customer_id = $queue_data['customer_id'];
+                $customer_type = $queue_data['customer_type'];
+
+                error_log("Queue data fetched: Customer ID=$customer_id, Customer Type=$customer_type");
+
+                // Update the corresponding status in the respective table
+                if ($customer_type === 'Walk-in') {
+                    $update_walkin_query = "UPDATE walk_in SET walk_in_status = ? WHERE walk_in_id = ?";
+                    $stmt = $conn->prepare($update_walkin_query);
+                    $stmt->bind_param("si", $status, $customer_id);
+                    $stmt->execute();
+                } elseif ($customer_type === 'Reservation') {
+                    $update_reservation_query = "UPDATE reservations SET reservation_status = ? WHERE reservation_id = ?";
+                    $stmt = $conn->prepare($update_reservation_query);
+                    $stmt->bind_param("si", $status, $customer_id);
+                    $stmt->execute();
+                }
+
+                // Add notification for the customer
+                $notification_message = "";
+                if ($status === 'Serving') {
+                    $notification_message = "Your vehicle is now being served.";
+                } elseif ($status === 'Finished') {
+                    $notification_message = "Your vehicle service has been completed.";
+                }
+
+                if (!empty($notification_message)) {
+                    $notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'queue_update')";
+                    $stmt = $conn->prepare($notification_sql);
+                    $stmt->bind_param("is", $customer_id, $notification_message);
+                    $stmt->execute();
+                }
+
+                // Notify the admin if the status is "Finished"
+                if ($status === 'Finished') {
+                    $admin_message = "Service for queue ID $queue_id has been marked as Finished. Please process remaining fees.";
+                    $admin_sql = "INSERT INTO notifications (admin_id, message, type) VALUES (1, ?, 'queue_update')";
+                    $stmt = $conn->prepare($admin_sql);
+                    $stmt->bind_param("s", $admin_message);
+                    $stmt->execute();
+                }
             }
         }
 
-        header("Location: manage_queue.php");
-        exit();
+        // Set the notification message for the staff
+        $notification = "Queue status successfully updated!";
     }
 }
 ?>
+
 <?php include 'sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,6 +105,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
 <div class="container">
     <h2>Manage Queue - <?php echo date('F j, Y'); ?></h2>
+
+    <!-- Notification Message -->
+    <?php if (!empty($notification)): ?>
+        <div class="notification success">
+            <?= htmlspecialchars($notification) ?>
+        </div>
+    <?php endif; ?>
+
     <table>
         <thead>
         <tr>
@@ -61,9 +123,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <th>Action</th>
         </tr>
         </thead>
-        <tbody>
-        <?php if (mysqli_num_rows($result) > 0): ?>
-            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <tbody id="queueTable">
+        <?php if ($result->num_rows > 0): ?>
+            <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><?= $row['queue_id'] ?></td>
                     <td><?= $row['customer_type'] ?></td>

@@ -27,6 +27,20 @@
                 <li><a href="#">About Us</a></li>
                 <li><a href="#">Contact</a></li>
             </ul>
+            <!-- Notification Icon -->
+            <div class="notification-bell">
+                <img src="images/notification-bell.png" alt="Notifications" id="notificationBell">
+                <span id="notificationCount" class="notification-count">0</span>
+                <div id="notificationDropdown" class="notification-dropdown">
+                    <div class="dropdown-header">Notifications</div>
+                    <div class="dropdown-body" id="notificationBody">
+                        <p>No new notifications</p>
+                    </div>
+                    <div class="dropdown-footer">
+                        <a href="all_notifications.php">View All</a>
+                    </div>
+                </div>
+            </div>
             <img src="images/user.jpg" class="user-pic" onclick="toggleMenu()">
 
             <div class="sub-menu-wrap" id="subMenu">
@@ -62,6 +76,7 @@
         </nav>
     </div>
 
+    <script src="js/notification.js"></script>
     <script>
         let subMenu = document.getElementById("subMenu");
 
