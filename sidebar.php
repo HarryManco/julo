@@ -1,3 +1,17 @@
+<?php
+include 'db_connect.php'; // Include your database connection file
+
+// Fetch count of unread notifications for admin (user_id IS NULL)
+$query = "SELECT COUNT(*) AS unread_count FROM notifications WHERE user_id IS NULL AND status = 'unread'";
+$result = $conn->query($query);
+$unread_count = 0;
+
+if ($result) {
+    $row = $result->fetch_assoc();
+    $unread_count = $row['unread_count'];
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +23,13 @@
 <body>
 <div class="admin-sidebar">
     <h2>Admin Panel</h2>
-    <a href="#">Home</a>
+    <a href="sidebar.php">Home</a>
+    <a href="admin_notifications.php">
+        Notifications 
+        <?php if ($unread_count > 0): ?>
+            <span class="notification-count"><?php echo $unread_count; ?></span>
+        <?php endif; ?>
+    </a>
     <div class="dropdown">
         <a href="#">Reservations</a>
         <div class="dropdown-content">
@@ -23,10 +43,10 @@
             <a href="walk_in.php">Add Walk-In</a>
         </div>
     </div>
-    <a href="manage_queue.php">Queue</a>
-    <a href="manage_carsize.php">Car Sizing</a>
-    <a href="manage_services.php">Services</a>
-    <a href="manage_service_price.php">Pricing</a>
+    <a href="manage_queue.php">Manage Queue</a>
+    <a href="manage_carsize.php">Manage Car Sizing</a>
+    <a href="manage_services.php">Manage Services</a>
+    <a href="manage_service_price.php">Manage Pricing</a>
     <a href="carwash_transactions.php">Carwash Transaction</a>
     <a href="#">Sales Report</a>
     <a href="login.php">Log Out</a>
