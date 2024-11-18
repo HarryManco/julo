@@ -37,16 +37,16 @@
                         <p>No new notifications</p>
                     </div>
                     <div class="dropdown-footer">
-                        <a href="all_notifications.php">View All</a>
+                        <a href="#">View All</a>
                     </div>
                 </div>
             </div>
-            <img src="images/user.jpg" class="user-pic" onclick="toggleMenu()">
+            <img src="images/user.png" class="user-pic" onclick="toggleMenu()">
 
             <div class="sub-menu-wrap" id="subMenu">
                 <div class="sub-menu">
                     <div class="user-info">
-                        <img src="images/user.jpg">
+                        <img src="images/user.png">
                         <h3>Johary Manco</h3>
                     </div>
                     <hr>

@@ -2,9 +2,10 @@
 session_start();
 include 'db_connect.php';
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Turn off error display for production and log errors
+ini_set('log_errors', 1);
+ini_set('error_log', '/path/to/php-error.log'); // Adjust the path
+ini_set('display_errors', 0);
 
 if (
     !empty($_POST['reservation_date']) &&
@@ -33,81 +34,89 @@ if (
     $reservation_status = "Approved";
     $payment_status = "Unpaid";
     $payment_method = "PayPal"; // Assuming PayPal is used
-    $user_id = $_SESSION['user_id']; // Retrieve the user ID from the session
+    $user_id = $_SESSION['user_id'];
 
+    // Start a transaction
     $conn->begin_transaction();
 
     try {
         // Deduct service quantity
         $quantity_update_sql = "UPDATE services SET quantity = quantity - 1 WHERE id = ? AND quantity > 0";
         $quantity_stmt = $conn->prepare($quantity_update_sql);
-        if ($quantity_stmt) {
-            $quantity_stmt->bind_param("i", $service_type);
-            if (!$quantity_stmt->execute() || $quantity_stmt->affected_rows === 0) {
-                throw new Exception("Service is out of stock or invalid service ID.");
-            }
-        } else {
-            throw new Exception("Error preparing quantity update statement: " . $conn->error);
+        $quantity_stmt->bind_param("i", $service_type);
+        if (!$quantity_stmt->execute() || $quantity_stmt->affected_rows === 0) {
+            throw new Exception("Service is out of stock or invalid.");
         }
         $quantity_stmt->close();
 
-        // Insert reservation data
-        $sql = "INSERT INTO reservations (user_id, reservation_date, customer_name, vehicle_type, phone, service_type, slot, reservation_time, end_time, price, paid_fee, remaining_fee, reservation_status, payment_status) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+        // Insert reservation
+        $reservation_sql = "INSERT INTO reservations (user_id, reservation_date, customer_name, vehicle_type, phone, service_type, slot, reservation_time, end_time, price, paid_fee, remaining_fee, reservation_status, payment_status) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($reservation_sql);
+        $stmt->bind_param("isssssssssddss", $user_id, $reservation_date, $customer_name, $vehicle_type, $phone, $service_type, $slot, $reservation_time, $end_time, $price, $paid_fee, $remaining_fee, $reservation_status, $payment_status);
+        if (!$stmt->execute()) {
+            throw new Exception("Error inserting reservation: " . $stmt->error);
+        }
+        $reservation_id = $stmt->insert_id;
+        $stmt->close();
 
-        if ($stmt) {
-            $stmt->bind_param("isssssssssddss", $user_id, $reservation_date, $customer_name, $vehicle_type, $phone, $service_type, $slot, $reservation_time, $end_time, $price, $paid_fee, $remaining_fee, $reservation_status, $payment_status);
+        // Insert into queue
+        $queue_status = "Waiting";
+        $queue_sql = "INSERT INTO queue (user_id, reservation_id, queue_status, slot, queue_time, start_time, end_time, queue_date, notification_status) 
+              VALUES (?, ?, ?, ?, NOW(), ?, ?, ?, 'pending')";
+        $queue_stmt = $conn->prepare($queue_sql);
 
-            if ($stmt->execute()) {
-                $reservation_id = $stmt->insert_id;
-                
-                // Insert into queue
-                $queue_status = "Waiting";
-                $queue_sql = "INSERT INTO queue (customer_id, customer_type, queue_status, assigned_slot, queue_time, start_time, end_time, queue_date) 
-                              VALUES (?, 'Reservation', ?, ?, NOW(), ?, ?, ?)";
-                $queue_stmt = $conn->prepare($queue_sql);
-                
-                if ($queue_stmt) {
-                    $queue_stmt->bind_param("isssss", $reservation_id, $queue_status, $slot, $reservation_time, $end_time, $reservation_date);
-                    if (!$queue_stmt->execute()) {
-                        throw new Exception("Error adding reservation to queue: " . $queue_stmt->error);
-                    }
-                    $queue_stmt->close();
-                } else {
-                    throw new Exception("Error preparing queue statement: " . $conn->error);
-                }
+        if (!$queue_stmt) {
+            throw new Exception("Error preparing queue SQL: " . $conn->error);
+        }
 
-                // Insert transaction for reservation fee
-                $transaction_sql = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
-                                    VALUES (?, 'Reservation', 'Reservation Fee', ?, ?)";
-                $transaction_stmt = $conn->prepare($transaction_sql);
+        // Bind parameters: user_id (int), reservation_id (int), queue_status (string), slot (int),
+        // start_time (string), end_time (string), queue_date (string)
+        $queue_stmt->bind_param("iisssss", $user_id, $reservation_id, $queue_status, $slot, $reservation_time, $end_time, $reservation_date);
 
-                if ($transaction_stmt) {
-                    $transaction_stmt->bind_param("ids", $user_id, $paid_fee, $payment_method);
-                    if (!$transaction_stmt->execute()) {
-                        throw new Exception("Error adding transaction: " . $transaction_stmt->error);
-                    }
-                    $transaction_stmt->close();
-                } else {
-                    throw new Exception("Error preparing transaction statement: " . $conn->error);
-                }
-            } else {
-                throw new Exception("Error adding reservation: " . $stmt->error);
-            }
-            $stmt->close();
-        } else {
-            throw new Exception("Error preparing reservation statement: " . $conn->error);
+        if (!$queue_stmt->execute()) {
+            throw new Exception("Error inserting into queue: " . $queue_stmt->error);
+        }
+
+        $queue_stmt->close();
+
+        // Add transaction
+        $transaction_sql = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
+                            VALUES (?, 'Reservation', 'Reservation Fee', ?, ?)";
+        $transaction_stmt = $conn->prepare($transaction_sql);
+        $transaction_stmt->bind_param("ids", $user_id, $paid_fee, $payment_method);
+        if (!$transaction_stmt->execute()) {
+            throw new Exception("Error inserting transaction: " . $transaction_stmt->error);
+        }
+        $transaction_stmt->close();
+
+        // Add customer notification
+        $customer_message = "Your reservation for $service_type on $reservation_date has been successfully created.";
+        $customer_notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'reservation')";
+        $stmt = $conn->prepare($customer_notification_sql);
+        $stmt->bind_param("is", $user_id, $customer_message);
+        if (!$stmt->execute()) {
+            throw new Exception("Error inserting customer notification: " . $stmt->error);
+        }
+
+        // Add admin notification
+        $admin_message = "A new reservation has been made by user ID $user_id for service $service_type.";
+        $admin_notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (1, ?, 'reservation')";
+        $stmt = $conn->prepare($admin_notification_sql);
+        $stmt->bind_param("s", $admin_message);
+        if (!$stmt->execute()) {
+            throw new Exception("Error inserting admin notification: " . $stmt->error);
         }
 
         $conn->commit();
-        echo "Reservation, Queue, and Transaction successfully added. Quantity updated.";
+        echo json_encode(["success" => true, "message" => "Reservation successfully added."]);
     } catch (Exception $e) {
         $conn->rollback();
-        echo "Transaction Error: " . $e->getMessage();
+        error_log("Transaction Error: " . $e->getMessage());
+        echo json_encode(["success" => false, "message" => $e->getMessage()]);
     }
 } else {
-    echo "All fields are required!";
+    echo json_encode(["success" => false, "message" => "All fields are required!"]);
 }
 
 $conn->close();

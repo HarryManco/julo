@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+
 .container {
     max-width: 800px;
     margin: 20px auto;
@@ -32,17 +33,57 @@ button:hover {
     background-color: #0056b3;
 }
 
+/* Notification Styling */
 .notification {
-    margin-bottom: 20px;
-    padding: 10px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
     border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     font-size: 16px;
-    text-align: center;
     font-family: 'Poppins', sans-serif;
+    z-index: 1000;
+    color: white;
+    display: none; /* Hidden by default */
+    animation: fadeIn 0.5s, fadeOut 0.5s 4.5s;
 }
 
+/* Success Notification */
 .notification.success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: #28a745; /* Green */
+}
+
+/* Error Notification */
+.notification.error {
+    background-color: #dc3545; /* Red */
+}
+
+/* Warning Notification */
+.notification.warning {
+    background-color: #ffc107; /* Yellow */
+    color: #212529; /* Dark text */
+}
+
+/* Notification Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
 }

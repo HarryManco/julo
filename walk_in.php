@@ -5,6 +5,14 @@ include 'db_connect.php';
 $message = "";
 $message_class = "";
 
+// Check if the admin is logged in
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+    header('Location: login.php');
+    exit();
+}
+
+$admin_id = $_SESSION['user_id']; // Get admin's user_id from session
+
 // Fetch available vehicles from car_sizes
 $vehicles_query = "SELECT id, car_model FROM car_sizes";
 $vehicles_result = mysqli_query($conn, $vehicles_query);
@@ -23,7 +31,22 @@ while ($service = mysqli_fetch_assoc($services_result)) {
 
 // Fetch today's queue based on slots
 $today_date = date("Y-m-d");
-$queue_query = "SELECT queue_id, customer_id, start_time, end_time, assigned_slot FROM queue WHERE queue_date = ? ORDER BY assigned_slot, start_time";
+$queue_query = "
+    SELECT 
+        q.queue_id,
+        q.slot,
+        q.start_time,
+        q.end_time,
+        CASE 
+            WHEN q.reservation_id IS NOT NULL THEN r.customer_name
+            WHEN q.walk_in_id IS NOT NULL THEN w.customer_name
+            ELSE 'Unknown'
+        END AS customer_name
+    FROM queue q
+    LEFT JOIN reservations r ON q.reservation_id = r.reservation_id
+    LEFT JOIN walk_in w ON q.walk_in_id = w.walk_in_id
+    WHERE q.queue_date = ?
+    ORDER BY q.slot, q.start_time";
 $stmt = $conn->prepare($queue_query);
 $stmt->bind_param("s", $today_date);
 $stmt->execute();
@@ -31,7 +54,7 @@ $queue_result = $stmt->get_result();
 
 $queues = ['1' => [], '2' => [], '3' => []];
 while ($row = mysqli_fetch_assoc($queue_result)) {
-    $slot = $row['assigned_slot'];
+    $slot = $row['slot'];
     $queues[$slot][] = $row;
 }
 $stmt->close();
@@ -55,6 +78,8 @@ $conn->close();
     </div>
 
     <form id="walkInForm">
+        <input type="hidden" id="user_id" name="user_id" value="<?= $admin_id ?>"> <!-- Hidden field for admin user_id -->
+
         <label for="customer_name">Customer Name:</label>
         <input type="text" id="customer_name" name="customer_name" required placeholder="Enter customer name">
 
@@ -110,9 +135,9 @@ $conn->close();
                         <?php if (!empty($queues[$slot])): ?>
                             <?php foreach ($queues[$slot] as $entry): ?>
                                 <tr>
-                                    <td><?= $entry['customer_id'] ?></td>
-                                    <td><?= date("H:i", strtotime($entry['start_time'])) ?></td>
-                                    <td><?= date("H:i", strtotime($entry['end_time'])) ?></td>
+                                    <td><?= htmlspecialchars($entry['customer_name']) ?></td>
+                                    <td><?= htmlspecialchars(date("H:i", strtotime($entry['start_time']))) ?></td>
+                                    <td><?= htmlspecialchars(date("H:i", strtotime($entry['end_time']))) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>

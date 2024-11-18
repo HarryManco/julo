@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const reservationForm = document.getElementById("reservationForm");
+    const paypalContainer = document.getElementById("paypal-button-container");
+
+    // Close notification after a few seconds
     function closeNotification() {
         const notification = document.querySelector('.notification');
         if (notification) {
@@ -141,4 +145,34 @@ document.addEventListener("DOMContentLoaded", function () {
         const formattedMinutes = minutes.toString().padStart(2, '0');
         return `${formattedHours}:${formattedMinutes} ${period}`;
     }
+    paypal.Buttons({
+        createOrder: function (data, actions) {
+            const paidFee = parseFloat(document.getElementById("paid_fee").value);
+            return actions.order.create({
+                purchase_units: [{
+                    amount: { value: paidFee.toFixed(2) }
+                }]
+            });
+        },
+        onApprove: function (data, actions) {
+            return actions.order.capture().then(function () {
+                // Submit form data via AJAX without the payment completion alert
+                const formData = new FormData(reservationForm);
+                fetch('process_reservation.php', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Redirect to show the success message
+                            window.location.href = "reservation.php?success=true";
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        }
+    }).render(paypalContainer);    
 });

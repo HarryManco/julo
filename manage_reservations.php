@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $payment_status = $_POST['payment_status'];
 
     // Fetch reservation details
-    $fetch_query = "SELECT price, paid_fee, remaining_fee FROM reservations WHERE reservation_id = ?";
+    $fetch_query = "SELECT price, paid_fee, remaining_fee, user_id, customer_name FROM reservations WHERE reservation_id = ?";
     $fetch_stmt = $conn->prepare($fetch_query);
     $fetch_stmt->bind_param("i", $reservation_id);
     $fetch_stmt->execute();
@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
         $price = $reservation['price'];
         $paid_fee = $reservation['paid_fee'];
         $remaining_fee = $reservation['remaining_fee'];
+        $user_id = $reservation['user_id'];
+        $customer_name = $reservation['customer_name'];
     } else {
         $message = "Reservation not found.";
         $message_class = "error";
@@ -53,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             if ($reservation_status == 'Completed' && $payment_status == 'Fully Paid') {
                 // Create a transaction for the remaining fee
                 if ($remaining_fee > 0) {
-                    $transaction_query = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
-                                          VALUES (?, 'Reservation', 'Remaining Fee', ?, 'Cash')";
+                    $transaction_query = "INSERT INTO carwash_transactions (customer_id, customer_name, transaction_type, payment_type, amount, payment_method) 
+                                          VALUES (?, ?, 'Reservation', 'Remaining Fee', ?, 'Cash')";
                     $transaction_stmt = $conn->prepare($transaction_query);
-                    $transaction_stmt->bind_param("id", $reservation_id, $remaining_fee);
+                    $transaction_stmt->bind_param("isd", $user_id, $customer_name, $remaining_fee);
 
                     if (!$transaction_stmt->execute()) {
                         throw new Exception("Error inserting transaction for remaining fee: " . $transaction_stmt->error);
@@ -73,6 +75,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
                 $fee_update_stmt->bind_param("dii", $new_paid_fee, $remaining_fee, $reservation_id);
                 $fee_update_stmt->execute();
                 $fee_update_stmt->close();
+
+                // Add a customer notification
+                $notification_message = "Your vehicle service has been completed. The total fee of ₱" . number_format($new_paid_fee, 2) . " has been successfully paid. Thank you! Come again.";
+                $notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'reservation_update')";
+                $notification_stmt = $conn->prepare($notification_sql);
+                $notification_stmt->bind_param("is", $user_id, $notification_message);
+                $notification_stmt->execute();
+                $notification_stmt->close();
 
                 $message = "Reservation and transaction records updated successfully!";
                 $message_class = "success";

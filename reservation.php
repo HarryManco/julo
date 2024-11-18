@@ -137,38 +137,6 @@ $success_message = isset($_GET['success']) && $_GET['success'] == 'true' ? "Rese
 </div>
 <!-- Include PayPal SDK -->
 <script src="https://www.paypal.com/sdk/js?client-id=AZeoASur185mEoI_Ds1k9OET1cgdacu9_7yIlGqrSEFAgABJeYnBkRb5PIjJkIrl7gc0pIDr7qmwM09j&currency=PHP"></script>
-
-<!-- PayPal Button Integration -->
-<script>
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return actions.order.create({
-                purchase_units: [{
-                    amount: {
-                        value: document.getElementById('paid_fee').value // Ensure 'paid_fee' has a valid amount
-                    }
-                }]
-            });
-        },
-        onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
-                alert('Payment completed by ' + details.payer.name.given_name);
-
-                // Send form data to server for reservation
-                const formData = new FormData(document.getElementById('reservationForm'));
-                fetch('process_reservation.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.text())
-                .then(data => {
-                    window.location.href = "reservation.php?success=true";
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        }
-    }).render('#paypal-button-container'); // Render PayPal button
-</script>
 <script src="js/reservation.js"></script>
 </body>
 </html>

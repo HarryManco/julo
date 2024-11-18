@@ -304,3 +304,118 @@ Walk-in record inserted with ID: 30
 Available time: 07:05:00, End time: 07:35:00
 Queue entry added successfully
 Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Kevin Alcanar
+    [vehicle_type] => 11
+    [service_type] => 7
+    [slot] => 3
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 31
+Available time: 07:05:00, End time: 07:35:00
+An error occurred: Failed to execute queue insert query: No data supplied for parameters in prepared statement
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Kevin Alcanar
+    [vehicle_type] => 11
+    [service_type] => 7
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 32
+Available time: 07:05:00, End time: 07:35:00
+An error occurred: Failed to execute queue insert query: No data supplied for parameters in prepared statement
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Kevin Alcanar
+    [vehicle_type] => 9
+    [service_type] => 7
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 33
+Available time: 07:05:00, End time: 07:35:00
+An error occurred: Failed to execute queue insert query: No data supplied for parameters in prepared statement
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Kevin Alcanar
+    [vehicle_type] => 9
+    [service_type] => 7
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 34
+Available time: 07:05:00, End time: 07:35:00
+An error occurred: Failed to execute queue insert query: No data supplied for parameters in prepared statement
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Kevin Alcanar
+    [vehicle_type] => 9
+    [service_type] => 7
+    [slot] => 1
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 35
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Ronalyn Guingab
+    [vehicle_type] => 10
+    [service_type] => 7
+    [slot] => 3
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 36
+Available time: 07:05:00, End time: 07:35:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Harry Manco
+    [vehicle_type] => 10
+    [service_type] => 6
+    [slot] => 2
+    [price] => 100.00
+    [duration] => 25
+)
+
+Transaction started
+Walk-in record inserted with ID: 37
+Available time: 13:00:00, End time: 13:25:00
+Queue entry added successfully
+Transaction committed

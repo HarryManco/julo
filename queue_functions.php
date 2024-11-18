@@ -7,7 +7,7 @@ function checkSlotAvailability($slot, $date, $start_time, $duration) {
     $end_time = date("H:i:s", strtotime("+$duration minutes", strtotime($start_time)));
 
     $query = "SELECT * FROM queue 
-              WHERE assigned_slot = ? 
+              WHERE slot = ? 
               AND queue_date = ?
               AND (
                   (start_time <= ? AND end_time > ?) OR 

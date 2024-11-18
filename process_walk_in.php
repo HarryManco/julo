@@ -19,10 +19,13 @@ try {
     $duration = $_POST['duration'] ?? '';
     $today_date = date("Y-m-d");
 
+    // Get admin's user_id from session for tracking purposes
+    $user_id = $_SESSION['user_id'] ?? null;
+
     file_put_contents($log_file, "POST data: " . print_r($_POST, true) . "\n", FILE_APPEND);
 
     // Validate required fields
-    if (!$customer_name || !$vehicle_id || !$service_id || !$slot || !$price || !$duration) {
+    if (!$customer_name || !$vehicle_id || !$service_id || !$slot || !$price || !$duration || !$user_id) {
         throw new Exception("Missing required fields.");
     }
 
@@ -31,15 +34,15 @@ try {
     file_put_contents($log_file, "Transaction started\n", FILE_APPEND);
 
     // Insert walk-in record
-    $insert_query = "INSERT INTO walk_in (customer_name, vehicle_type, service_type, slot, price, payment_status, walk_in_status, duration, created_at) 
-                     VALUES (?, ?, ?, ?, ?, 'Unpaid', 'Waiting', ?, NOW())";
+    $insert_query = "INSERT INTO walk_in (customer_name, vehicle_type, service_type, slot, price, payment_status, walk_in_status, duration, created_at, user_id) 
+                     VALUES (?, ?, ?, ?, ?, 'Unpaid', 'Waiting', ?, NOW(), ?)";
     $stmt = $conn->prepare($insert_query);
-    
+
     if (!$stmt) {
         throw new Exception("Failed to prepare walk-in insert query: " . $conn->error);
     }
 
-    $stmt->bind_param("siisdi", $customer_name, $vehicle_id, $service_id, $slot, $price, $duration);
+    $stmt->bind_param("siisdis", $customer_name, $vehicle_id, $service_id, $slot, $price, $duration, $user_id);
     if (!$stmt->execute()) {
         throw new Exception("Failed to execute walk-in insert query: " . $stmt->error);
     }
@@ -58,11 +61,15 @@ try {
     file_put_contents($log_file, "Available time: $available_time, End time: $end_time\n", FILE_APPEND);
 
     // Insert into queue
-    $queue_query = "INSERT INTO queue (customer_id, customer_type, queue_status, assigned_slot, queue_time, queue_date, start_time, end_time) 
-                    VALUES (?, 'Walk-in', 'Waiting', ?, NOW(), ?, ?, ?)";
+    $queue_query = "INSERT INTO queue (walk_in_id, user_id, queue_status, slot, queue_time, queue_date, start_time, end_time, notification_status) 
+                    VALUES (?, ?, 'Waiting', ?, NOW(), ?, ?, ?, 'pending')";
     $queue_stmt = $conn->prepare($queue_query);
-    $queue_stmt->bind_param("issss", $walk_in_id, $slot, $today_date, $available_time, $end_time);
-    
+
+    if (!$queue_stmt) {
+        throw new Exception("Failed to prepare queue insert query: " . $conn->error);
+    }
+
+    $queue_stmt->bind_param("iiisss", $walk_in_id, $user_id, $slot, $today_date, $available_time, $end_time);
     if (!$queue_stmt->execute()) {
         throw new Exception("Failed to execute queue insert query: " . $queue_stmt->error);
     }
@@ -88,7 +95,7 @@ function getAvailableTime($slot, $date, $duration, $conn) {
     $opening_time = "07:00:00";
     $closing_time = "19:00:00";
 
-    $query = "SELECT end_time FROM queue WHERE assigned_slot = ? AND queue_date = ? ORDER BY end_time DESC LIMIT 1";
+    $query = "SELECT end_time FROM queue WHERE slot = ? AND queue_date = ? ORDER BY end_time DESC LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("is", $slot, $date);
     $stmt->execute();
@@ -97,7 +104,7 @@ function getAvailableTime($slot, $date, $duration, $conn) {
     $stmt->close();
 
     $last_end_time = $last_entry ? $last_entry['end_time'] : $opening_time;
-    $next_start_time = date("H:i:s", strtotime($last_end_time) + 5 * 60);
+    $next_start_time = date("H:i:s", strtotime($last_end_time) * 60);
 
     if (strtotime($next_start_time) + $duration * 60 > strtotime($closing_time)) {
         return false;

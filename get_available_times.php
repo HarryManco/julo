@@ -5,6 +5,7 @@ ini_set('display_errors', 1);
 include 'db_connect.php';
 include 'queue_functions.php';
 
+// Get parameters from the GET request
 $date = $_GET['date'];
 $slot = intval($_GET['slot']);
 $service_duration = intval($_GET['duration']);
@@ -17,14 +18,14 @@ $current_time = $opening_time;
 try {
     // Prepare and execute the query to fetch existing bookings
     $query = "SELECT start_time, end_time FROM queue 
-              WHERE assigned_slot = ? AND queue_date = ? AND queue_status IN ('Waiting', 'Serving', 'Finished')";
+              WHERE slot = ? AND queue_date = ? AND queue_status IN ('Waiting', 'Serving', 'Finished')";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("is", $slot, $date);
     $stmt->execute();
     $result = $stmt->get_result();
     $bookedTimes = $result->fetch_all(MYSQLI_ASSOC);
 
-    // Helper function to get the next available half-hour or hour after a given time
+    // Helper function to get the next aligned time (half-hour or full hour)
     function getNextAlignedTime($time) {
         $minutes = (int)date('i', strtotime($time));
         if ($minutes <= 30) {
@@ -39,7 +40,7 @@ try {
         $booked_start = $booking['start_time'];
         $booked_end = $booking['end_time'];
         
-        // While current_time is before the booked start time, add available slots
+        // Add available slots before the booked start time
         while (strtotime($current_time) < strtotime($booked_start) && strtotime($current_time) < strtotime($closing_time)) {
             $available_times[] = $current_time;
             $current_time = date("H:i", strtotime("+30 minutes", strtotime($current_time)));
@@ -51,13 +52,13 @@ try {
         }
     }
 
-    // After processing all bookings, continue adding available times until closing time
+    // Add remaining available times until the store's closing time
     while (strtotime($current_time) < strtotime($closing_time)) {
         $available_times[] = $current_time;
         $current_time = date("H:i", strtotime("+30 minutes", strtotime($current_time)));
     }
 
-    // Set Content-Type header for JSON response
+    // Set the Content-Type header for a JSON response
     header('Content-Type: application/json');
     echo json_encode($available_times);
 
