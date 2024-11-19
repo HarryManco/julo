@@ -48,7 +48,7 @@ if ($result) {
     <a href="manage_services.php">Manage Services</a>
     <a href="manage_service_price.php">Manage Pricing</a>
     <a href="carwash_transactions.php">Carwash Transaction</a>
-    <a href="#">Sales Report</a>
+    <a href="sales_report.php">Sales Report</a>
     <a href="login.php">Log Out</a>
 </div>
 <!-- Main content area -->

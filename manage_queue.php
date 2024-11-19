@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($stmt->execute()) {
                 $response["success"] = true;
                 $response["message"] = "Queue status updated successfully.";
-
+            
                 // Fetch related data for updating reservation or walk-in status
                 $fetch_query = "SELECT q.reservation_id, q.walk_in_id, q.user_id, r.remaining_fee, w.customer_name 
                                 FROM queue q 
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $fetch_stmt->bind_param("i", $queue_id);
                 $fetch_stmt->execute();
                 $result = $fetch_stmt->get_result();
-
+            
                 if ($result->num_rows > 0) {
                     $queue_data = $result->fetch_assoc();
                     $reservation_id = $queue_data['reservation_id'];
@@ -44,7 +44,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $user_id = $queue_data['user_id'];
                     $remaining_fee = $queue_data['remaining_fee'];
                     $customer_name = $queue_data['customer_name'];
-
+            
+                    // Update reservation status if it's linked to this queue
+                    if (!empty($reservation_id)) {
+                        $reservation_status = null;
+                        if ($queue_status === 'Serving') {
+                            $reservation_status = 'Serving';
+                        } elseif ($queue_status === 'Finished') {
+                            $reservation_status = 'Finished';
+                        }
+            
+                        if ($reservation_status !== null) {
+                            $update_reservation_query = "UPDATE reservations SET reservation_status = ? WHERE reservation_id = ?";
+                            $update_reservation_stmt = $conn->prepare($update_reservation_query);
+                            $update_reservation_stmt->bind_param("si", $reservation_status, $reservation_id);
+                            $update_reservation_stmt->execute();
+                            $update_reservation_stmt->close();
+                        }
+                    }
+            
                     // Add notifications for different statuses
                     $notification_message = "";
                     if ($queue_status === 'Serving') {
@@ -52,14 +70,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     } elseif ($queue_status === 'Finished') {
                         $notification_message = "Your vehicle service has been finished. Please pay the remaining fee of ₱" . number_format($remaining_fee, 2) . " at the counter.";
                     }
-
+            
                     if (!empty($notification_message)) {
                         $notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'queue_update')";
                         $notification_stmt = $conn->prepare($notification_sql);
                         $notification_stmt->bind_param("is", $user_id, $notification_message);
                         $notification_stmt->execute();
                     }
-
+            
                     // Add admin notification if status is "Finished"
                     if ($queue_status === 'Finished') {
                         $admin_message = "Queue ID $queue_id for customer $customer_name has been marked as Finished. Please process the remaining fees.";
@@ -69,7 +87,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $admin_notification_stmt->execute();
                     }
                 }
-            } else {
+            }
+             else {
                 $response["message"] = "Failed to update queue status.";
             }
         }

@@ -19,6 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     // Fetch reservation details
     $fetch_query = "SELECT price, paid_fee, remaining_fee, user_id, customer_name FROM reservations WHERE reservation_id = ?";
     $fetch_stmt = $conn->prepare($fetch_query);
+
+    if (!$fetch_stmt) {
+        die("Prepare failed: " . $conn->error); // Log error
+    }
+
     $fetch_stmt->bind_param("i", $reservation_id);
     $fetch_stmt->execute();
     $reservation = $fetch_stmt->get_result()->fetch_assoc();
@@ -47,48 +52,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
             // Update reservation and payment status
             $update_query = "UPDATE reservations SET reservation_status = ?, payment_status = ? WHERE reservation_id = ?";
             $update_stmt = $conn->prepare($update_query);
+
+            if (!$update_stmt) {
+                throw new Exception("Prepare failed: " . $conn->error); // Log error
+            }
+
             $update_stmt->bind_param("ssi", $reservation_status, $payment_status, $reservation_id);
             $update_stmt->execute();
             $update_stmt->close();
 
-            // If status is Completed and payment is Fully Paid, create transaction and adjust fees
-            if ($reservation_status == 'Completed' && $payment_status == 'Fully Paid') {
-                // Create a transaction for the remaining fee
-                if ($remaining_fee > 0) {
-                    $transaction_query = "INSERT INTO carwash_transactions (customer_id, customer_name, transaction_type, payment_type, amount, payment_method) 
-                                          VALUES (?, ?, 'Reservation', 'Remaining Fee', ?, 'Cash')";
-                    $transaction_stmt = $conn->prepare($transaction_query);
-                    $transaction_stmt->bind_param("isd", $user_id, $customer_name, $remaining_fee);
+            // Add notification if status is updated to Waiting
+            if ($reservation_status === 'Waiting') {
+                $notification_message = "Your reservation is now in the queue and marked as Waiting.";
+                $notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'reservation_update')";
+                $notification_stmt = $conn->prepare($notification_sql);
 
-                    if (!$transaction_stmt->execute()) {
-                        throw new Exception("Error inserting transaction for remaining fee: " . $transaction_stmt->error);
+                if (!$notification_stmt) {
+                    throw new Exception("Prepare failed: " . $conn->error); // Log error
+                }
+
+                $notification_stmt->bind_param("is", $user_id, $notification_message);
+                $notification_stmt->execute();
+                $notification_stmt->close();
+            }
+
+            // Handle fully paid logic
+            if ($reservation_status == 'Completed' && $payment_status == 'Fully Paid') {
+                if ($remaining_fee > 0) {
+                    $transaction_query = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
+                                          VALUES (?, 'Reservation', 'Remaining Fee', ?, 'Cash')";
+                    $transaction_stmt = $conn->prepare($transaction_query);
+
+                    if (!$transaction_stmt) {
+                        throw new Exception("Prepare failed: " . $conn->error); // Log error
                     }
+
+                    $transaction_stmt->bind_param("id", $user_id, $remaining_fee);
+                    $transaction_stmt->execute();
                     $transaction_stmt->close();
                 }
 
-                // Update the reservation record to set remaining fee to 0 and add the remaining fee to paid fee
+                // Update reservation fees
                 $new_paid_fee = $paid_fee + $remaining_fee;
                 $remaining_fee = 0;
 
                 $fee_update_query = "UPDATE reservations SET paid_fee = ?, remaining_fee = ? WHERE reservation_id = ?";
                 $fee_update_stmt = $conn->prepare($fee_update_query);
+
+                if (!$fee_update_stmt) {
+                    throw new Exception("Prepare failed: " . $conn->error); // Log error
+                }
+
                 $fee_update_stmt->bind_param("dii", $new_paid_fee, $remaining_fee, $reservation_id);
                 $fee_update_stmt->execute();
                 $fee_update_stmt->close();
 
-                // Add a customer notification
+                // Add notification
                 $notification_message = "Your vehicle service has been completed. The total fee of ₱" . number_format($new_paid_fee, 2) . " has been successfully paid. Thank you! Come again.";
                 $notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'reservation_update')";
                 $notification_stmt = $conn->prepare($notification_sql);
+
+                if (!$notification_stmt) {
+                    throw new Exception("Prepare failed: " . $conn->error); // Log error
+                }
+
                 $notification_stmt->bind_param("is", $user_id, $notification_message);
                 $notification_stmt->execute();
                 $notification_stmt->close();
-
-                $message = "Reservation and transaction records updated successfully!";
-                $message_class = "success";
             }
 
             $conn->commit();
+            $message = "Reservation status updated successfully!";
+            $message_class = "success";
         } catch (Exception $e) {
             $conn->rollback();
             $message = "An error occurred: " . $e->getMessage();
@@ -101,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
 $reservations_query = "SELECT * FROM reservations ORDER BY reservation_date DESC";
 $reservations_result = mysqli_query($conn, $reservations_query);
 ?>
+
 <?php include 'sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">

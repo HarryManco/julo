@@ -101,7 +101,7 @@ if (
 
         // Add admin notification
         $admin_message = "A new reservation has been made by user ID $user_id for service $service_type.";
-        $admin_notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (1, ?, 'reservation')";
+        $admin_notification_sql = "INSERT INTO notifications (user_id, message, type) VALUES (NULL, ?, 'reservation')";
         $stmt = $conn->prepare($admin_notification_sql);
         $stmt->bind_param("s", $admin_message);
         if (!$stmt->execute()) {

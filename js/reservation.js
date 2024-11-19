@@ -88,24 +88,19 @@ document.addEventListener("DOMContentLoaded", function () {
         const slot = document.getElementById("slot").value;
         const serviceDuration = document.getElementById("service_type").getAttribute("data-duration");
         const timeSelect = document.getElementById("reservation_time");
-
+    
         if (selectedDate && slot && serviceDuration) {
             fetch(`get_available_times.php?date=${selectedDate}&slot=${slot}&duration=${serviceDuration}`)
                 .then(response => response.json())
                 .then(data => {
                     // Clear existing options
                     timeSelect.innerHTML = "<option value=''>--Select Time--</option>";
-
+    
                     if (data.length > 0) {
-                        // Populate the time dropdown with available times
                         data.forEach(time => {
                             const option = new Option(time, time);
                             timeSelect.add(option);
                         });
-
-                        // Automatically select the first available time
-                        timeSelect.value = data[0];
-                        calculateEndTime(); // Update the end time
                     } else {
                         const option = new Option("No available times", "");
                         timeSelect.add(option);
@@ -113,11 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .catch(error => console.error("Error fetching available times:", error));
         } else {
-            // Clear time options if no valid date, slot, or service selected
             timeSelect.innerHTML = "<option value=''>--Select Time--</option>";
         }
     }
-
+    
     function calculateEndTime() {
         const startTime = document.getElementById("reservation_time").value;
         const endTimeField = document.getElementById("end_time");
