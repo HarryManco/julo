@@ -1,0 +1,124 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.background {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #e7e7e7;
+    background-size: cover;
+    background-position: center;
+    padding: 50px;
+}
+
+.julo-logo {
+    align-self: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 100%;
+}
+
+.julo-cafe-1 {
+    width: 788px;
+    border-radius: 15px;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.cafe-list {
+    border-radius: 15px;
+    background-color: #ffffff;
+    max-width: 100%;
+    padding: 60px;
+    gap: 35px;
+    z-index: 1;
+    text-align: left;
+    font-size: 20px;
+    color: #000000;
+    margin: 50px;
+    position: relative;
+}
+
+/* Center My Cart Button */
+.cart-btn-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.cart-btn {
+    padding: 10px 20px;
+    background-color: #7c3d18;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cart-btn:hover {
+    background-color: #5a2b13;
+}
+
+.menu-item {
+    border-radius: 15px;
+    border: 1px solid #000000;
+    padding: 10px;
+    margin: 10px;
+    width: 300px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.item1, .item2, .item3 {
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+#menu-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+/* Always Show Quantity and Add to Cart Buttons */
+.menu-item input[type="number"],
+.menu-item button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.menu-item input[type="number"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    text-align: center;
+}
+
+.menu-item button {
+    padding: 10px;
+    background-color: #7c3d18;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu-item button:hover {
+    background-color: #5a2b13;
+}

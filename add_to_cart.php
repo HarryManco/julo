@@ -38,6 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['notification'] = 'Item added to cart successfully!';
     $_SESSION['notification_class'] = 'success';
 
-    header("Location: cart.php");
+    header("Location: cart1.php");
     exit();
 }

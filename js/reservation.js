@@ -26,24 +26,40 @@ document.addEventListener("DOMContentLoaded", function () {
         const startTime = 7; // 7:00 AM
         const endTime = 19; // 7:00 PM
         const interval = 30; // 30-minute intervals
-
+        const now = new Date();
+    
+        // Current date and time
+        const currentDate = now.toISOString().split("T")[0];
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
+    
         // Clear existing options
         timeSelect.innerHTML = "<option value=''>--Select Time--</option>";
-
-        for (let hour = startTime; hour <= endTime; hour++) {
+    
+        for (let hour = startTime; hour < endTime; hour++) {
             for (let minute = 0; minute < 60; minute += interval) {
+                const optionTime = new Date();
+                optionTime.setHours(hour, minute, 0);
+    
+                const optionValue = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
                 const period = hour >= 12 ? "PM" : "AM";
                 const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
                 const displayMinute = minute.toString().padStart(2, '0');
                 const formattedTime = `${displayHour}:${displayMinute} ${period}`;
-                const optionValue = `${hour.toString().padStart(2, '0')}:${displayMinute}`;
-
-                // Create and append options
+    
+                // Exclude past times if the selected date is today
+                if (selectedDate === currentDate) {
+                    if (hour < currentHours || (hour === currentHours && minute <= currentMinutes)) {
+                        continue;
+                    }
+                }
+    
+                // Create and append valid options
                 const option = new Option(formattedTime, optionValue);
                 timeSelect.add(option);
             }
         }
-    }
+    }    
 
     function updatePriceAndDuration() {
         const vehicleSelect = document.getElementById("vehicle_type");

@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($walk_in_id && $status && $payment_status) {
         try {
-            // Begin transaction
+            // Begin transaction for data consistency
             $conn->begin_transaction();
 
             // Prevent setting "Completed" status if Payment Status is "Unpaid"
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 throw new Exception("Cannot mark as Completed when Payment Status is Unpaid.");
             }
 
-            // Update walk-in table
+            // Update the walk-in table
             $update_query = "UPDATE walk_in SET walk_in_status = ?, payment_status = ? WHERE walk_in_id = ?";
             $stmt = $conn->prepare($update_query);
             if (!$stmt) {
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $stmt->execute();
             $stmt->close();
 
-            // Update queue table if status is "Completed"
+            // Update queue status if walk-in status is "Completed"
             if ($status === 'Completed') {
                 $queue_update_query = "UPDATE queue SET queue_status = 'Completed' WHERE walk_in_id = ?";
                 $queue_stmt = $conn->prepare($queue_update_query);
@@ -39,8 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $queue_stmt->execute();
                 $queue_stmt->close();
 
-                // Add transaction if Fully Paid
+                // Add a transaction if Fully Paid
                 if ($payment_status === 'Fully Paid') {
+                    // Fetch the walk-in details (price and user ID)
                     $fetch_price_query = "SELECT price, user_id FROM walk_in WHERE walk_in_id = ?";
                     $price_stmt = $conn->prepare($fetch_price_query);
                     if (!$price_stmt) {
@@ -54,6 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $user_id = $price_data['user_id']; // Fetch user_id for tracking
                     $price_stmt->close();
 
+                    // Insert the transaction into carwash_transactions table
                     $transaction_query = "INSERT INTO carwash_transactions (customer_id, transaction_type, payment_type, amount, payment_method) 
                                           VALUES (?, 'Walk-in', 'Full Payment', ?, 'Cash')";
                     $transaction_stmt = $conn->prepare($transaction_query);
@@ -64,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $transaction_stmt->execute();
                     $transaction_stmt->close();
 
-                    // Add notification for user
+                    // Add a notification for the customer
                     $notification_message = "Your walk-in service has been completed. The full payment of ₱" . number_format($amount, 2) . " has been successfully received. Thank you!";
                     $notification_query = "INSERT INTO notifications (user_id, message, type) VALUES (?, ?, 'walk_in_update')";
                     $notification_stmt = $conn->prepare($notification_query);
@@ -77,11 +79,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             }
 
-            // Commit transaction
+            // Commit the transaction
             $conn->commit();
 
             $response = ["status" => "success", "message" => "Walk-in and queue status updated successfully!"];
         } catch (Exception $e) {
+            // Rollback the transaction on error
             $conn->rollback();
             $response = ["status" => "error", "message" => $e->getMessage()];
         }
@@ -90,5 +93,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+// Return the JSON response
 echo json_encode($response);
 $conn->close();

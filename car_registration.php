@@ -54,7 +54,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -62,22 +61,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Car</title>
     <link rel="stylesheet" href="css/car.css">
-    <script src="js/car.js"></script> <!-- Link to the external JS file -->
-    <script>
-        // JavaScript function to validate plate number format in real-time
-        function validatePlateNumber(input) {
-            const plateFormat = /^[A-Z]{3} \d{3}$/;
-            const value = input.value.toUpperCase(); // Automatically convert input to uppercase
-
-            // Show error if the format doesn't match
-            if (!plateFormat.test(value) && value.length > 0) {
-                input.setCustomValidity("Plate number must be in the format 'AAA 111'");
-            } else {
-                input.setCustomValidity(""); // Clear the error if format is correct
-            }
-            input.value = value; // Update the input value in uppercase
-        }
-    </script>
+    <!-- Link to Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
 <?php include 'header.php'; ?>
@@ -90,10 +75,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="POST" action="">
             <!-- Car Model -->
             <label for="car_model">Select Car Model:</label>
-            <select name="car_model" required>
-                <?php while ($car_size = mysqli_fetch_assoc($car_sizes_result)): ?>
-                    <option value="<?= $car_size['car_model'] ?>"><?= $car_size['car_model'] ?></option>
-                <?php endwhile; ?>
+            <select id="car_model" name="car_model" class="searchable-dropdown" required>
+                <option></option> <!-- Placeholder for Select2 -->
+                <?php
+                while ($car_size = mysqli_fetch_assoc($car_sizes_result)) {
+                    echo "<option value='{$car_size['car_model']}'>{$car_size['car_model']}</option>";
+                }
+                ?>
             </select>
 
             <!-- Plate Number -->
@@ -110,6 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <!-- Reserve Now button -->
         <a href="calendar.php" class="reserve-btn">Reserve Now</a>
+
+        <!-- Add paragraph under the Reserve Now button -->
+        <p class="additional-info">Can't find your car model? Try to register your car. <a href="car_model.php">Click here.</a></p>
     </div>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <!-- Link to external JS file -->
+    <script src="js/car_registration.js"></script>
 </body>
 </html>

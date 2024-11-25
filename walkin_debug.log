@@ -419,3 +419,37 @@ Walk-in record inserted with ID: 37
 Available time: 13:00:00, End time: 13:25:00
 Queue entry added successfully
 Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Ester Manco
+    [vehicle_type] => 9
+    [service_type] => 5
+    [slot] => 1
+    [price] => 300.00
+    [duration] => 50
+)
+
+Transaction started
+Walk-in record inserted with ID: 38
+Available time: 01:00:00, End time: 01:50:00
+Queue entry added successfully
+Transaction committed
+Starting walk-in process...
+POST data: Array
+(
+    [user_id] => 1
+    [customer_name] => Remel Mejos
+    [vehicle_type] => 9
+    [service_type] => 7
+    [slot] => 3
+    [price] => 150.00
+    [duration] => 30
+)
+
+Transaction started
+Walk-in record inserted with ID: 40
+Available time: 07:00:00, End time: 07:30:00
+Queue entry added successfully
+Transaction committed

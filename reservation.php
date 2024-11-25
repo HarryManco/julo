@@ -107,7 +107,7 @@ $success_message = isset($_GET['success']) && $_GET['success'] == 'true' ? "Rese
                 <label for="price">Service Price:</label>
                 <input type="text" id="price" name="price" readonly>
 
-                <label for="paid_fee">Paid Fee:</label>
+                <label for="paid_fee">Reservation Fee:</label>
                 <input type="text" id="paid_fee" name="paid_fee" value="1.00" readonly>
 
                 <label for="remaining_fee">Remaining Fee:</label>

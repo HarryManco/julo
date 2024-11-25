@@ -45,6 +45,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $remaining_fee = $queue_data['remaining_fee'];
                     $customer_name = $queue_data['customer_name'];
             
+                    // Update walk-in status if it's linked to this queue
+                    if (!empty($walk_in_id)) {
+                        $walk_in_status = null;
+                        if ($queue_status === 'Serving') {
+                            $walk_in_status = 'Serving';
+                        } elseif ($queue_status === 'Finished') {
+                            $walk_in_status = 'Finished';
+                        }
+            
+                        if ($walk_in_status !== null) {
+                            $update_walk_in_query = "UPDATE walk_in SET walk_in_status = ? WHERE walk_in_id = ?";
+                            $update_walk_in_stmt = $conn->prepare($update_walk_in_query);
+                            $update_walk_in_stmt->bind_param("si", $walk_in_status, $walk_in_id);
+                            $update_walk_in_stmt->execute();
+                            $update_walk_in_stmt->close();
+                        }
+                    }
+
                     // Update reservation status if it's linked to this queue
                     if (!empty($reservation_id)) {
                         $reservation_status = null;
@@ -87,14 +105,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $admin_notification_stmt->execute();
                     }
                 }
-            }
-             else {
+            } else {
                 $response["message"] = "Failed to update queue status.";
             }
         }
 
         echo json_encode($response);
-        exit;
+        exit();
     }
 }
 
@@ -130,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         }
 
         echo json_encode($queue_data);
-        exit;
+        exit();
     }
 }
 ?>

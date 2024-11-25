@@ -9,7 +9,7 @@
         <nav>
             <img src="img/CARWASH.png" class="logo">
             <ul>
-                <li><a href="home.php">Home</a></li>
+                <li><a href="#">Home</a></li>
                 <li class="dropdown"><a href="#">Carwash</a>
                     <ul class="dropdown-content">
                         <li><a href="car_registration.php">Car Registration</a></li>
@@ -18,8 +18,8 @@
                     </ul>
                 <li class="dropdown"><a href="#">Cafe</a>
                     <ul class="dropdown-content">
-                        <li><a href="cafemenu.php">Cafe Menu</a></li>
-                        <li><a href="cart.php">My Cart</a></li>
+                        <li><a href="cafe.php">Cafe Menu</a></li>
+                        <li><a href="cart1.php">My Cart</a></li>
                         <li><a href="order_history.php">Order History</a></li>
                     </ul>
                 </li>

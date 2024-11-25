@@ -21,6 +21,11 @@ $opening_time = "07:00"; // Store opens at 7:00 AM
 $closing_time = "19:00"; // Store closes at 7:00 PM
 $current_time = $opening_time;
 
+// Get the current date and time
+date_default_timezone_set('Asia/Manila');
+$currentDate = date("Y-m-d");
+$currentTime = date("H:i");
+
 try {
     // Fetch existing bookings for the selected slot and date
     $query = "SELECT start_time, end_time FROM queue 
@@ -51,7 +56,8 @@ try {
             $slot_end_time = date("H:i", strtotime("+$service_duration minutes", strtotime($current_time)));
 
             // Ensure the slot ends before the next booking starts or closing time
-            if (strtotime($slot_end_time) <= strtotime($booked_start)) {
+            if (strtotime($slot_end_time) <= strtotime($booked_start) &&
+                ($date !== $currentDate || strtotime($current_time) >= strtotime($currentTime))) {
                 $available_times[] = $current_time;
             }
 
@@ -68,8 +74,11 @@ try {
     while (strtotime($current_time) < strtotime($closing_time)) {
         $slot_end_time = date("H:i", strtotime("+$service_duration minutes", strtotime($current_time)));
 
-        // Ensure the slot ends before closing time
-        if (strtotime($slot_end_time) <= strtotime($closing_time)) {
+        // Ensure the slot ends before closing time and does not fall in the past
+        if (
+            strtotime($slot_end_time) <= strtotime($closing_time) &&
+            ($date !== $currentDate || strtotime($current_time) >= strtotime($currentTime))
+        ) {
             $available_times[] = $current_time;
         }
 

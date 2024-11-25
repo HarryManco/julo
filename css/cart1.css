@@ -1,0 +1,247 @@
+/* styles.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+/* General styles */
+body {
+    height: 100%;
+    margin: 0;
+    font-family: 'poppins',sans-serif;
+    background-color: #e7e7e7;
+}
+
+h2, h3 {
+    color: #555;
+}
+
+p {
+    margin: 0.5em 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+table th {
+    background-color: #f9f9f9;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+/* Quantity buttons styling */
+.quantity-form {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantity-form button {
+    padding: 5px 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #7c3d18;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.quantity-form button:hover {
+    background-color: #5a2b13;
+}
+
+.quantity-form span {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    display: inline-block;
+    min-width: 30px;
+}
+
+/* General button styles for actions */
+button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #7c3d18;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5a2b13;
+}
+
+/* Form styles */
+form {
+    display: inline;
+}
+
+/* Messages */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    width: fit-content;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Specific page styles */
+.cart-container {
+    margin-bottom: 20px;
+}
+
+.cart-container h3 {
+    margin-top: 20px;
+}
+
+.cart-container .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.cart-container .item h4 {
+    margin: 0;
+}
+
+.cart-container .item p {
+    margin: 0;
+}
+
+.cart-container .item .actions {
+    display: flex;
+    gap: 10px;
+}
+
+.cart-container .item .actions button {
+    background-color: #dc3545;
+}
+
+.cart-container .item .actions button:hover {
+    background-color: #c82333;
+}
+
+.receipt-container {
+    text-align: center;
+}
+
+.receipt-container ul {
+    list-style: none;
+    padding: 0;
+}
+
+.receipt-container li {
+    margin: 10px 0;
+}
+
+/* Admin styles */
+.admin-orders-container {
+    overflow-x: auto;
+}
+
+.admin-orders-container table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.admin-orders-container table th, .admin-orders-container table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.admin-orders-container table th {
+    background-color: #f9f9f9;
+}
+
+.admin-orders-container table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.admin-orders-container form select {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.admin-orders-container form button {
+    background-color: #007bff;
+}
+
+.admin-orders-container form button:hover {
+    background-color: #0069d9;
+}
+.checkout-btn {
+    display: flex;
+    justify-content: space-between;
+}
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: red;
+}

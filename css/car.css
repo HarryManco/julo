@@ -1,3 +1,4 @@
+/* Reset default margins and paddings */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -5,65 +6,112 @@ body {
     padding: 0;
 }
 
-.container {
+/* Style for the header section */
+header {
     background-color: #fff;
-    max-width: 600px;
-    margin: 50px auto;
+    padding: 20px 0; /* Adjust padding for proper spacing */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Adjust spacing for the main content */
+.container {
+    max-width: 500px;
+    margin: 50px auto; /* Ensure spacing between header and form */
     padding: 20px;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Heading styling */
 h2 {
     text-align: center;
     margin-bottom: 30px;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-form select, form input[type="text"], form input[type="tel"] {
+/* Form input and select styling */
+form select,
+form input[type="text"],
+form input[type="tel"] {
+    width: 100%; /* Full width for input fields */
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in width/height */
+    height: 45px; /* Uniform height for input fields */
 }
 
-form button {
-    padding: 10px;
-    background-color: #007bff;
+/* Select2 dropdown adjustments */
+.select2-container .select2-selection--single {
+    height: 45px; /* Match input field height */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.select2-container .select2-selection__rendered {
+    padding-left: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.select2-container .select2-selection__arrow {
+    height: 43px;
+    top: 1px;
+    right: 10px;
+}
+
+/* Button styling */
+form button,
+.reserve-btn {
+    display: block; /* Ensure buttons stack */
+    width: 100%; /* Full width for buttons */
+    padding: 10px; /* Same padding as input fields */
+    background-color: #007bff; /* Primary color for "Register Car" */
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 4px; /* Match input field border radius */
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
+    font-size: 16px; /* Match font size of input fields */
+    height: 45px; /* Same height as input fields */
+    margin-bottom: 15px; /* Space between buttons */
+    box-sizing: border-box; /* Include padding and border in width/height */
+    text-align: center; /* Center-align text */
 }
 
+/* Hover effects */
 form button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Slightly darker blue for hover */
 }
 
-a {
-    display: inline-block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #007bff;
+/* "Reserve Now" button specific */
+.reserve-btn {
+    background-color: #007bff; /* Green color for differentiation */
+    font-weight: bold; /* Make it stand out */
+    margin-top: 0; /* Ensure no extra spacing above */
 }
 
-a:hover {
-    text-decoration: underline;
+.reserve-btn:hover {
+    background-color: #218838; /* Darker green on hover */
 }
 
-/* Notification styling */
+/* Notification messages */
 .notification {
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 5px;
     text-align: center;
+    font-size: 16px;
 }
 
 .notification.success {
@@ -76,21 +124,21 @@ a:hover {
     color: #721c24;
 }
 
-/* Reserve Now button styling */
-.reserve-btn {
-    margin-top: 20px;
-    padding: 12px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    width: 100%; /* Make the button full-width */
+/* Additional info text */
+.additional-info {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
     text-align: center;
-    display: block;
+    line-height: 1.5; /* Improve readability */
 }
 
-.reserve-btn:hover {
-    background-color: #0056b3;
+.additional-info a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold; /* Make links stand out */
+}
+
+.additional-info a:hover {
+    text-decoration: underline;
 }
