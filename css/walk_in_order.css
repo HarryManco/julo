@@ -1,0 +1,161 @@
+/* General Layout */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+}
+
+/* Menu Items Section */
+.menu-items {
+    flex: 2;
+    border-right: 1px solid #ddd;
+    padding-right: 20px;
+}
+
+.menu-items h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.menu-item {
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.menu-item h4 {
+    font-size: 16px;
+    margin: 10px 0;
+    color: #444;
+}
+
+.menu-item p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #777;
+}
+
+.menu-item button {
+    padding: 10px 15px;
+    background-color: #7c3d18;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.menu-item button:hover {
+    background-color: #7c3d18;
+}
+
+/* Orders Section */
+.orders {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.orders h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.orders table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders table th, .orders table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.orders .total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.submit-order {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #7c3d18;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-order:hover {
+    background-color: #7c3d18;
+}
+/* Customer Name Styling - Aligned to Left */
+.customer-name {
+    margin: 20px 0;
+    text-align: left; /* Align text and input to the left */
+}
+
+.customer-name label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}
+
+.customer-name input[type="text"] {
+    padding: 8px 12px;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.customer-name input[type="text"]:focus {
+    border-color: #7c3d18;
+    outline: none;
+    box-shadow: 0 0 5px rgba(124, 61, 24, 0.5);
+}

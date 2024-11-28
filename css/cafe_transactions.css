@@ -1,15 +1,14 @@
 /* General body styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    width: 90%;
-    margin: auto;
-    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -17,16 +16,16 @@ body {
 }
 
 h2 {
-    color: #333;
     text-align: center;
-    font-size: 32px;
+    color: #333;
     margin-bottom: 20px;
+    font-size: 32px;
 }
 
 /* Filter Section */
 .filter-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: 20px;
     gap: 20px;
 }
@@ -59,7 +58,7 @@ h2 {
 
 .transaction-table th, .transaction-table td {
     padding: 12px;
-    text-align: center;
+    text-align: left;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
 }
@@ -72,8 +71,7 @@ h2 {
 }
 
 .transaction-table td {
-    font-size: 14px;
-    color: #333;
+    background-color: #f9f9f9;
 }
 
 .transaction-table tr:nth-child(even) {
@@ -82,6 +80,11 @@ h2 {
 
 .transaction-table tr:hover {
     background-color: #f1f1f1;
+}
+
+.transaction-table td {
+    font-size: 14px;
+    color: #333;
 }
 
 .transaction-table td,

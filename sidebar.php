@@ -48,6 +48,7 @@ if ($result) {
         <div class="dropdown-content">
             <a href="admin_cafe.php">Cafe Products</a>
             <a href="manage_orders.php">Cafe Orders</a>
+            <a href="walk_in_order.php">Walk-in Orders</a>
         </div>
     </div>
     <a href="manage_queue.php">Manage Queue</a>
@@ -56,7 +57,7 @@ if ($result) {
     <a href="manage_services.php">Manage Services</a>
     <a href="manage_service_price.php">Manage Service Pricing</a>
     <a href="carwash_transactions.php">Carwash Transaction</a>
-    <a href="#">Cafe Transaction</a>
+    <a href="cafe_transactions.php">Cafe Transaction</a>
     <a href="sales_report.php">Carwash Sales</a>
     <a href="#">Cafe Sales</a>
     <a href="login.php">Log Out</a>

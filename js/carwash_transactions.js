@@ -1,19 +1,24 @@
-// carwash_transactions.js
-
+// Filter transactions based on user selection
 function filterTransactions() {
-    const transactionType = document.getElementById("transactionTypeFilter").value;
-    const paymentType = document.getElementById("paymentTypeFilter").value;
-    const rows = document.querySelectorAll("#transactionTableBody tr");
+    const transactionType = document.getElementById('transactionTypeFilter').value;
+    const paymentType = document.getElementById('paymentTypeFilter').value;
+
+    let rows = document.querySelectorAll('#transactionTableBody tr');
 
     rows.forEach(row => {
-        const rowTransactionType = row.cells[4].textContent;
-        const rowPaymentType = row.cells[5].textContent;
+        let typeCell = row.cells[4].textContent;
+        let paymentCell = row.cells[3].textContent;
 
-        if ((transactionType === "All" || rowTransactionType === transactionType) &&
-            (paymentType === "All" || rowPaymentType === paymentType)) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+        let showRow = true;
+
+        if (transactionType !== 'All' && typeCell !== transactionType) {
+            showRow = false;
         }
+
+        if (paymentType !== 'All' && paymentCell !== paymentType) {
+            showRow = false;
+        }
+
+        row.style.display = showRow ? '' : 'none';
     });
 }
