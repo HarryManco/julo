@@ -3,12 +3,11 @@ require 'db_connect.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $customer_name = $_POST['customer_name'] ?? 'Walk-In Customer';
-    $menu_item_ids = $_POST['menu_item_ids'] ?? [];
-    $quantities = $_POST['quantities'] ?? [];
+    $customer_name = $_POST['customer_name'] ?? 'Walk-In Customer'; // Default if no name is provided
+    $orderItems = $_POST['order_items'] ?? [];
 
-    if (empty($menu_item_ids)) {
-        $_SESSION['error_message'] = "No items selected for the order.";
+    if (empty($orderItems)) {
+        $_SESSION['error_message'] = "No items selected.";
         header("Location: walk_in_order.php");
         exit();
     }
@@ -16,67 +15,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $conn->begin_transaction();
 
     try {
-        // Insert order
-        $stmt = $conn->prepare("INSERT INTO orders (user_id, total, status) VALUES (NULL, 0, 'Preparing')");
+        // Insert order into the `orders` table
+        $stmt = $conn->prepare("INSERT INTO orders (user_id, total, status, created_at, updated_at) VALUES (NULL, 0, 'Preparing', NOW(), NULL)");
         if (!$stmt->execute()) {
             throw new Exception("Failed to insert order: " . $stmt->error);
         }
-        $order_id = $conn->insert_id;
-        $stmt->close();
+        $orderId = $conn->insert_id;
 
         $total = 0;
 
-        // Insert each order item
+        // Insert order items and update stock
         $stmt = $conn->prepare("INSERT INTO order_items (order_id, menu_item_id, quantity) VALUES (?, ?, ?)");
-        foreach ($menu_item_ids as $menu_item_id) {
-            $quantity = $quantities[$menu_item_id] ?? 0;
-
+        foreach ($orderItems as $menuItemId => $quantity) {
             // Fetch item details
-            $item_stmt = $conn->prepare("SELECT price, quantity FROM menu_items WHERE id = ?");
-            $item_stmt->bind_param("i", $menu_item_id);
-            $item_stmt->execute();
-            $item = $item_stmt->get_result()->fetch_assoc();
-            $item_stmt->close();
+            $itemStmt = $conn->prepare("SELECT price, quantity FROM menu_items WHERE id = ?");
+            $itemStmt->bind_param("i", $menuItemId);
+            $itemStmt->execute();
+            $item = $itemStmt->get_result()->fetch_assoc();
+            $itemStmt->close();
 
             if (!$item || $quantity > $item['quantity']) {
-                throw new Exception("Invalid item or insufficient stock for item ID: $menu_item_id");
+                throw new Exception("Insufficient stock for item ID: $menuItemId");
             }
 
             $subtotal = $item['price'] * $quantity;
             $total += $subtotal;
 
-            $stmt->bind_param("iii", $order_id, $menu_item_id, $quantity);
+            // Insert into order_items
+            $stmt->bind_param("iii", $orderId, $menuItemId, $quantity);
             if (!$stmt->execute()) {
                 throw new Exception("Failed to insert order item: " . $stmt->error);
             }
 
-            // Update menu stock
-            $update_stock_stmt = $conn->prepare("UPDATE menu_items SET quantity = quantity - ? WHERE id = ?");
-            $update_stock_stmt->bind_param("ii", $quantity, $menu_item_id);
-            if (!$update_stock_stmt->execute()) {
-                throw new Exception("Failed to update stock: " . $update_stock_stmt->error);
+            // Update stock
+            $stockStmt = $conn->prepare("UPDATE menu_items SET quantity = quantity - ? WHERE id = ?");
+            $stockStmt->bind_param("ii", $quantity, $menuItemId);
+            if (!$stockStmt->execute()) {
+                throw new Exception("Failed to update stock: " . $stockStmt->error);
             }
-            $update_stock_stmt->close();
+            $stockStmt->close();
         }
         $stmt->close();
 
-        // Update total in orders
-        $update_total_stmt = $conn->prepare("UPDATE orders SET total = ? WHERE id = ?");
-        $update_total_stmt->bind_param("di", $total, $order_id);
-        if (!$update_total_stmt->execute()) {
-            throw new Exception("Failed to update order total: " . $update_total_stmt->error);
+        // Update the total in the `orders` table
+        $totalStmt = $conn->prepare("UPDATE orders SET total = ? WHERE id = ?");
+        $totalStmt->bind_param("di", $total, $orderId);
+        if (!$totalStmt->execute()) {
+            throw new Exception("Failed to update order total: " . $totalStmt->error);
         }
-        $update_total_stmt->close();
+        $totalStmt->close();
+
+        // Store the customer name in the session
+        $_SESSION['walk_in_customers'][$orderId] = $customer_name;
 
         $conn->commit();
         $_SESSION['success_message'] = "Order placed successfully!";
         header("Location: walk_in_order.php");
-        exit();
     } catch (Exception $e) {
         $conn->rollback();
         error_log("Transaction failed: " . $e->getMessage());
-        $_SESSION['error_message'] = "Error processing order: " . $e->getMessage();
+        $_SESSION['error_message'] = "Error: " . $e->getMessage();
         header("Location: walk_in_order.php");
-        exit();
     }
 }

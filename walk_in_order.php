@@ -7,6 +7,7 @@ $stmt = $conn->prepare("SELECT id, name, price, image FROM menu_items");
 $stmt->execute();
 $menu_items = $stmt->get_result();
 ?>
+<?php include 'sidebar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +19,17 @@ $menu_items = $stmt->get_result();
 <body>
     <div class="container">
         <h2>Walk-In Order</h2>
+
+        <!-- Notification Messages -->
+        <?php if (!empty($_SESSION['success_message'])): ?>
+            <p class="success-message"><?= htmlspecialchars($_SESSION['success_message']); ?></p>
+            <?php unset($_SESSION['success_message']); ?>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['error_message'])): ?>
+            <p class="error-message"><?= htmlspecialchars($_SESSION['error_message']); ?></p>
+            <?php unset($_SESSION['error_message']); ?>
+        <?php endif; ?>
+
         <form action="process_walk_in_order.php" method="POST" id="order-form">
             <!-- Customer Name Input -->
             <div class="customer-name">

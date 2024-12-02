@@ -35,13 +35,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['order_id'], $_POST['st
     $stmt->close();
 }
 
-// Fetch today's orders based on Philippines timezone
+// Fetch today's orders
 $current_date = date('Y-m-d');
 $orders_today_query = "
-    SELECT orders.id, orders.total, orders.status, users.username, orders.created_at
+    SELECT 
+        orders.id, 
+        orders.total, 
+        orders.status, 
+        orders.created_at, 
+        users.username AS username
     FROM orders
-    JOIN users ON orders.user_id = users.id
-    WHERE DATE(CONVERT_TZ(orders.created_at, '+00:00', '+08:00')) = ?
+    LEFT JOIN users ON orders.user_id = users.id
+    WHERE DATE(orders.created_at) = ?
 ";
 
 $stmt = $conn->prepare($orders_today_query);
@@ -87,9 +92,13 @@ $stmt->close();
         <tbody>
         <?php if ($orders_today && mysqli_num_rows($orders_today) > 0): ?>
             <?php while ($order = mysqli_fetch_assoc($orders_today)): ?>
+                <?php
+                // Determine customer name
+                $customer_name = $order['username'] ?: ($_SESSION['walk_in_customers'][$order['id']] ?? 'Walk-In Customer');
+                ?>
                 <tr>
                     <td><?= $order['id'] ?></td>
-                    <td><?= htmlspecialchars($order['username']) ?></td>
+                    <td><?= htmlspecialchars($customer_name) ?></td>
                     <td>P<?= number_format($order['total'], 2) ?></td>
                     <td><?= htmlspecialchars($order['created_at']) ?></td>
                     <td><?= ucfirst(htmlspecialchars($order['status'])) ?></td>
